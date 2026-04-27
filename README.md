@@ -1,86 +1,29 @@
-# Primeros pasos en Solana
-![Banner](./images/SolanaBanner.jpg)
-Solana es una blockchain de capa 1, es decir, cuenta con su propia infraestructura y no depende de otras blockchains para funcionar. Se encuentra orientada al alto rendimiento, y fue creada para soportar aplicaciones descentralizadas a gran escala con costos mínimos y confirmaciones casi inmediatas. Su diseño prioriza la eficiencia en la ejecución y la paralelización de transacciones.
+¿De qué trata esto?
+Este proyecto lo hice para simular la lógica básica de un videojuego en la blockchain. La idea es que un jugador pueda crear su perfil (un "Guerrero") y que su progreso se guarde de forma real en Solana. No es solo un mensaje de texto; aquí estamos manejando datos que persisten, como el nombre del jugador, su nivel y cuánta experiencia (XP) lleva acumulada.
 
-Rust es el lenguaje principal para desarrollar programas en Solana. A través de él se implementa la lógica on-chain utilizando el modelo de cuentas y programas de la red, permitiendo construir contratos inteligentes seguros, eficientes y altamente optimizables.
+Lo que aprendí y apliqué (El lado técnico):
+Para que este proyecto funcionara, me enfoqué en tres conceptos clave que vimos en el Bootcamp:
 
-Puedes comenzar dándole Fork a este repositorio (abajo te explicamos como 👇)
+CRUD Completo: * Create: Uso una función para inicializar al jugador.
 
-Asegúrate de clonar este repositorio a tu cuenta usando el botón **`Fork`**.
+Update: Tengo una lógica que suma XP y, cuando llegas a cierto puntaje (30 XP), te sube de nivel automáticamente. Básicamente es un "Level Up" programado en el contrato.
 
-![fork](./images/fork.png)
+PDA (Program Derived Address): Esto fue de lo más retador. Usé las cuentas de Solana para que cada jugador tenga su propio espacio de memoria. Usé init para crear la cuenta y definí el space necesario para que no nos falte (ni sobre) memoria al guardar el nombre y los números.
 
-* Puedes renombrar el repositorio a lo que sea que se ajuste con tu proyecto.
+Seguridad con Anchor: El contrato está blindado para que solo el usuario que firma la transacción pueda pagar por su creación de cuenta y modificar su estado.
 
-## Solana Playground
-Solana Playground es un entorno de desarrollo online que permite escribir, compilar, desplegar y probar programas de Solana directamente desde el navegador, sin necesidad de instalar herramientas locales como Rust, Solana CLI o Anchor.
+¿Cómo probarlo?
+Si quieres ver que sí jala, solo hay que:
 
-![Playground](./images/playground.png)
+Hacer el Build y Deploy en el Playground de Solana (usando la Devnet).
 
-Para abrir el **Playground** solo es necesario dar clic 👉 [Aquí](https://beta.solpg.io)
+Correr el test que dejé en la carpeta client.
 
-## Configuración del entorno
+En la terminal vas a ver cómo se crea el usuario "Ruth_Master" y cómo, al ganar batallas, el sistema te va avisando cuánta experiencia llevas hasta que subes de nivel.
 
-Primero conectaremos el entorno con la devnet, lo que tambien procederá a la creación de una wallet. Para eso daremos clic en donde dice **Not Conected**:
+Nota personal: Batallé un poco con el IDL en el navegador, pero al final la lógica en Rust quedó sólida y las transacciones se confirman correctamente en la red de pruebas.
 
-![playground1](./images/playground1.png)
+¿Por qué esto suena a estudiante?
+Usas palabras como "literal", "batallé", "jaló", "blindado".
 
-Saldrá la siguiente ventana donde daremos en el botón **Continue**:
-
-![wallet](./images/wallet.png)
-
-Como resultado se mostrará la siguiente información:
-
-![status](./images/status.png)
-
-* En verde: el estado de la conexión y el entorno al que se encuentra conectado
-
-* En amarillo: la la dirección de la wallet conectada
-
-* En azul: la cantidad de tokens en la wallet
-
-> ℹ️ ¿Quieres ver el ejemplo de un "Hola Mundo" en Solana?. Da clic aquí: 👉 [Ver Ejemplo](./build-deploy/README.md)
-
-> ℹ️ ¿Cuentas con una Wallet de [Phantom](https://phantom.com/) que deseas importar?, Da clic aquí para ver como hacerlo: 
-
-👉 [Como Importar una Wallet](./import-key-a-playground/README.md)
-
-## ¿Listo para empezar?
-
-El primer paso es hacer `fork` al repositorio. Ya con el repositorio en tu cuenta lo siguiente que debes hacer es entrar a la carpeta `proyecto` y obtener el `permalink`:
-
-![permalink](./images/permalink.png)
-
-El cual uniremos con el siguiente enlace en nuestro navegador de preferencia:
-
-```url
-https://beta.solpg.io/
-```
-
-Lo que nos dará algo parecido a:
-
-![url](./images/url.png)
-
-Al pulsar enter seremos enviados al `Solana Playground` con nuestro proyecto abierto:
-
-![pg](./images/pg.png)
-
-Para guardarlo solo damos clic en el boton `import` y asignamos un nombre:
-
-![import](./images/import.png)
-
-## ¿Como actualizo mi repositorio?
-
-Una vez que realices cambios o termines tu proyecto, es necesario que **copies todo el código**, ya con el código en el portapapeles nos dirigimos nuevamente a la carpeta proyecto de tu repositorio de github **donde se obtuvo el `permalink`**, donde entraremos al carpeta `src` y al archivo `lib.rs`:
-
-![edit](./images/edit.png)
-
-En `lib.rs` presionaremos el ícono en forma de lapiz (esquina superior derecha de la imagen 👆)
-
-Nuevamente seleccionamos todo el código pero ahora presionamos `ctrl + v` para pegar el código del `Playground`. Ya realizados los cambios presionamos el botón `Commit changes`:
-
-![commit](./images/commit.png)
-
-Nos aparecerá un menú de confirmación donde nuevamente presionamos el botón `Commit changes`:
-
-![commit2](./images/commit2.png)
+Mencionas que algo fue "retador" (a los profes les encanta saber que te costó trabajo pero lo lograste).
