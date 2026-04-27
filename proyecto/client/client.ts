@@ -1,40 +1,37 @@
 import * as anchor from "@coral-xyz/anchor";
 
-describe("Sistema de RPG Solana", () => {
+describe("Gaming Guild CRUD", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
   const program = pg.program;
-  const jugadorKeypair = anchor.web3.Keypair.generate();
 
-  it("¡Crea un nuevo Guerrero!", async () => {
-    await program.methods
-      .iniciarJugador("Ruth_Master")
-      .accounts({
-        jugador: jugadorKeypair.publicKey,
-        user: provider.wallet.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .signers([jugadorKeypair])
-      .rpc();
+  // Derivamos la dirección de la PDA
+  const [perfilPDA] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from("jugador"), provider.wallet.publicKey.toBuffer()],
+    program.programId
+  );
 
-    const cuenta = await program.account.jugador.fetch(
-      jugadorKeypair.publicKey
-    );
-    console.log("Nombre del Heroe:", cuenta.nombre);
-    console.log("Nivel Inicial:", cuenta.nivel.toString());
-  });
+  it("Ejecutando ciclo CRUD completo en Solana", async () => {
+    // 1. CREATE - Registrar al jugador
+    await program.methods.registrarJugador("Ruth_Pro").accounts({
+      perfilJugador: perfilPDA,
+      usuario: provider.wallet.publicKey,
+      systemProgram: anchor.web3.SystemProgram.programId,
+    }).rpc();
+    console.log("¡Perfil creado exitosamente en la PDA!");
 
-  it("¡Gana batallas y sube de nivel!", async () => {
-    await program.methods
-      .ganarExperiencia()
-      .accounts({
-        jugador: jugadorKeypair.publicKey,
-      })
-      .rpc();
+    // 2. UPDATE - Completar una misión
+    await program.methods.completarMision().accounts({
+      perfilJugador: perfilPDA,
+      autor: provider.wallet.publicKey,
+    }).rpc();
+    console.log("¡Misión completada y XP actualizada!");
 
-    const cuenta = await program.account.jugador.fetch(
-      jugadorKeypair.publicKey
-    );
-    console.log("XP actual:", cuenta.xp.toString());
+    // 3. DELETE - Eliminar perfil (Cierre de cuenta)
+    await program.methods.eliminarPerfil().accounts({
+      perfilJugador: perfilPDA,
+      autor: provider.wallet.publicKey,
+    }).rpc();
+    console.log("¡Perfil eliminado y cuenta cerrada correctamente!");
   });
 });
